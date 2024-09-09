@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Load our environmental variables
 load_dotenv()
 
-DB_PASSWORD_KIO = os.environ['DB_PASSWORD_KIO']
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -86,7 +86,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'railway',
         'USER': 'postgres',
-        'PASSWORD': DB_PASSWORD_KIO,
+        'PASSWORD': os.environ['DB_PASSWORD_KIO'],
         'HOST': 'junction.proxy.rlwy.net',
         'PORT': '11980',
         
