@@ -23,8 +23,8 @@ SECRET_KEY = os.environ['SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-CSRF_TRUSTED_ORIGINS = []
+ALLOWED_HOSTS = ['kiowall-production.up.railway.app', 'https://kiowall-production.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['kiowall-production.up.railway.app', 'https://kiowall-production.up.railway.app']
 
 # Application definition
 
