@@ -1,0 +1,77 @@
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container px-4 px-lg-5">
+        <!-- Markenname / Logo -->
+        <a class="navbar-brand" href="{% url 'home' %}">Kio Wall</a>
+        
+        <!-- Toggler für mobile Ansicht -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarUnterstützterInhalt" aria-controls="navbarUnterstützterInhalt" aria-expanded="false" aria-label="Navigation umschalten">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <!-- Navigationsinhalt -->
+        <div class="collapse navbar-collapse" id="navbarUnterstützterInhalt">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'home' %}">Startseite</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">about</a></li>
+
+                {% if user.is_authenticated %}
+                <!-- Dropdown für authentifizierte Benutzer -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdownProfile" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Profil</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownProfile">
+                        <li><a class="dropdown-item" href="{% url 'update_user' %}">Benutzerprofil</a></li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li><a class="dropdown-item" href="{% url 'update_info' %}">Benutzerinformationen</a></li>
+                    </ul>
+                </li>
+
+                {% if user.is_superuser %}
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdownProfile" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Bestellungen</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownProfile">
+                        <li><a class="dropdown-item" href="{% url 'shipped_dash' %}">Versendete Bestellungen</a></li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li><a class="dropdown-item" href="{% url 'not_shipped_dash' %}">Nicht versendete Bestellungen</a></li>
+                    </ul>
+                </li>
+                {% endif %}
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'logout' %}">Abmelden</a>
+                </li>
+                {% else %}
+                <!-- Links für nicht authentifizierte Benutzer -->
+                <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Anmelden</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Registrieren</a></li>
+                {% endif %}
+                
+                <!-- Dropdown für Kategorien -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Dein-Markt</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{% url 'category_summary' %}">Alle Produkte</a></li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li><a class="dropdown-item" href="{% url 'category' 'Getränke' %}">Getränke</a></li>
+                        <li><a class="dropdown-item" href="{% url 'category' 'E-Zigaretten' %}">E-Zigaretten</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <form class="d-flex ms-4" method="POST" action="{% url 'search' %}">
+                {% csrf_token %}
+                <input type="text" class="form-control me-2 border-0 rounded-pill shadow-sm" placeholder="Suche nach Produkten" name="searched" aria-label="Suche">
+                <button type="submit" class="btn btn-dark rounded-pill px-4">
+                    <i class="bi-search"></i>
+
+                </button>
+            </form>
+
+            <!-- Warenkorb -->
+            <a href="{% url 'cart_summary' %}" class="btn btn-outline-dark ms-4 rounded-pill">
+                <i class="bi-cart-fill me-1"></i>
+                <span class="badge bg-dark text-white ms-1 rounded-pill" id="cart_quantity">{{ cart|length }}</span>
+            </a>
+        </div>
+    </div>
+</nav>

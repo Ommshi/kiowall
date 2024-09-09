@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <div class="container" style="max-width: 720px;">
+        <div class="row g-4">
+            <!-- Bild in separater Karte -->
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="img-container" style="width: 100%; height: 100%; overflow: hidden;">
+                        <img src="{{ product.image.url }}" class="img-fluid rounded" alt="Produktbild" style="object-fit: cover; width: 100%; height: auto;">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Produktdetails in separater Karte -->
+            <div class="col-md-8 d-flex align-items-center">
+                <div class="card border-0 shadow-lg p-4">
+                    <h3 class="card-title text-primary">{{ product.name }}</h3>
+                    <p class="card-text">{{ product.description }}</p>
+
+                    {% if product.is_sale %}
+                        <div class="alert alert-success text-center" role="alert">
+                            <span class="fw-bold text-danger">Angebot!</span> Jetzt für nur {{ product.sale_price }} € <strike class="text-muted">{{ product.price }} €</strike>
+                        </div>
+                    {% else %}
+                        <p class="fw-bold">{{ product.price }} €</p>
+                    {% endif %}
+
+                    <div class="row justify-content-center mb-3">
+                        <div class="col-md-4 text-end">
+                            <label for="qty-cart" class="form-label">Menge:</label>
+                        </div>
+                        <div class="col-md-4">
+                            <select id="qty-cart" class="form-select">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+
+
+                    <p class="text-muted">Kategorie: {{ product.category }}</p>
+
+                    <div class="d-flex justify-content-between mt-3">
+                        <button type="button" value="{{ product.id }}" class="btn btn-secondary" id="add-cart">Add to Cart</button>
+                        <a href="{% url 'home' %}" class="btn btn-primary flex-fill ms-2">Zur Startseite</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    //check if button pressed
+    $(document).on('click', '#add-cart', function(e){
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: '{% url "cart_add" %}',
+            data: {
+                product_id: $('#add-cart').val(),
+                product_qty: $('#qty-cart option:selected').text(),
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                action: 'post'
+            },
+
+            success: function(json){
+                //console.log(json)
+                document.getElementById("cart_quantity").textContent = json.qty
+                location.reload();
+            },
+
+            error: function(xhr, errmsg, err){
+                
+            }
+
+
+
+
+        })
+
+
+
+
+    })
+
+
+
+</script>
+{% endblock %}

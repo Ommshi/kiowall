@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Anmelden</h1>
+            <p class="lead fw-normal text-white-50 mb-0">In dein Konto einloggen</p>
+        </div>
+    </div>
+</header>
+
+<!-- Container to centralize the form -->
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card p-4 shadow-sm">
+                <h3 class="text-center mb-4">Anmelden</h3>
+                <form method="POST" action="{% url 'login' %}">
+
+                        {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="exampleInputUsername" class="form-label">Benutzername</label>
+                        <input type="text" class="form-control" name="username" placeholder="Benutzername eingeben">
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputPassword1" class="form-label">Passwort</label>
+                        <input type="password" class="form-control" name="password" placeholder="Passwort eingeben">
+                    <br/><br/>
+                   
+                    <button type="submit" class="btn btn-primary w-100">Anmelden</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

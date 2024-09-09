@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Profil aktualisieren</h1>
+            <p class="lead fw-normal text-white-50 mb-0">Hier kannst du dein Profil aktualisieren.</p>
+        </div>
+    </div>
+</header>
+
+<!-- Container to centralize the form -->
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card p-4 shadow-sm">
+                <h3 class="text-center mb-4">Rechnungsinformationen</h3>
+
+                <form method="POST" action="{% url 'update_info' %}">
+
+                        {% csrf_token %}
+                        
+                        {{ form.as_p }}
+                        <br/><br/>
+                        <strong>Versandinformationen</strong>
+                        <br/><br/>
+
+                        {{ shipping_form.as_p }}
+                        <br/><br/>
+
+                        <button type="submit" class="btn btn-secondary"> Profil aktualisieren </button>
+
+                </form>
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
