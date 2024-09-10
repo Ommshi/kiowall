@@ -148,5 +148,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # PayPal settings
-PAYPAL_RECEIVER_EMAIL = 'your-paypal-business-email@example.com'
+PAYPAL_RECEIVER_EMAIL = 'business@kiowall.com'
 PAYPAL_TEST = True  # Set to False in production

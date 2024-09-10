@@ -8,7 +8,7 @@ from store.models import Product, Profile
 import datetime
 
 # Import Some Paypal Stuff
-from django.urls import reverse
+from django.urls import reverse #send back to last page
 from paypal.standard.forms import PayPalPaymentsForm
 from django.conf import settings
 import uuid # unique user id for duplictate orders
@@ -221,10 +221,10 @@ def billing_info(request):
 		paypal_dict = {
 			'business': settings.PAYPAL_RECEIVER_EMAIL,
 			'amount': totals,
-			'item_name': 'Book Order',
+			'item_name': 'Ihre Bestellungen auf KioWall',
 			'no_shipping': '2',
 			'invoice': str(uuid.uuid4()),
-			'currency_code': 'USD', # EUR for Euros
+			'currency_code': 'EUR',
 			'notify_url': 'https://{}{}'.format(host, reverse("paypal-ipn")),
 			'return_url': 'https://{}{}'.format(host, reverse("payment_success")),
 			'cancel_return': 'https://{}{}'.format(host, reverse("payment_failed")),
