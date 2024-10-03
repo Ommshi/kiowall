@@ -34,7 +34,7 @@ def orders(request, pk):
 				order = Order.objects.filter(id=pk)
 				# Update the status
 				order.update(shipped=False)
-			messages.success(request, "Shipping Status Updated")
+			messages.success(request, "Versandstatus aktualisiert")
 			return redirect('home')
 
 
@@ -44,7 +44,7 @@ def orders(request, pk):
 
 
 	else:
-		messages.success(request, "Access Denied")
+		messages.success(request, "Zugriff verweigert")
 		return redirect('home')
 
 
@@ -67,7 +67,7 @@ def not_shipped_dash(request):
 
 		return render(request, "payment/not_shipped_dash.html", {"orders":orders})
 	else:
-		messages.success(request, "Access Denied")
+		messages.success(request, "Zugriff verweigert")
 		return redirect('home')
 
 def shipped_dash(request):
@@ -83,13 +83,13 @@ def shipped_dash(request):
 			# update order
 			order.update(shipped=False)
 			# redirect
-			messages.success(request, "Shipping Status Updated")
+			messages.success(request, "Versandstatus aktualisiert")
 			return redirect('home')
 
 
 		return render(request, "payment/shipped_dash.html", {"orders":orders})
 	else:
-		messages.success(request, "Access Denied")
+		messages.success(request, "Zugriff verweigert")
 		return redirect('home')
 
 def process_order(request):
@@ -154,7 +154,7 @@ def process_order(request):
 			current_user.update(old_cart="")
 
 
-			messages.success(request, "Order Placed!")
+			messages.success(request, "Bestellung aufgegeben!")
 			return redirect('home')
 
 			
@@ -195,12 +195,12 @@ def process_order(request):
 
 
 
-			messages.success(request, "Order Placed!")
+			messages.success(request, "Bestellung aufgegeben!")
 			return redirect('home')
 
 
 	else:
-		messages.success(request, "Access Denied")
+		messages.success(request, "Zugriff verweigert")
 		return redirect('home')
 
 def billing_info(request):
@@ -215,15 +215,27 @@ def billing_info(request):
 		my_shipping = request.POST
 		request.session['my_shipping'] = my_shipping
 
+		# Gather Order Info
+		full_name = my_shipping['shipping_full_name']
+		email = my_shipping['shipping_email']
+		# Create Shipping Address from session info
+		shipping_address = f"{my_shipping['shipping_address1']}\n{my_shipping['shipping_address2']}\n{my_shipping['shipping_city']}\n{my_shipping['shipping_state']}\n{my_shipping['shipping_zipcode']}\n{my_shipping['shipping_country']}"
+		amount_paid = totals
+
+
+
 		# Get the host
 		host = request.get_host()
+		#Create an Invoice Number 
+		my_Invoice = str(uuid.uuid4())
+
 		# Create Paypal Form Dictionary
 		paypal_dict = {
 			'business': settings.PAYPAL_RECEIVER_EMAIL,
 			'amount': totals,
 			'item_name': 'Ihre Bestellungen auf KioWall',
 			'no_shipping': '2',
-			'invoice': str(uuid.uuid4()),
+			'invoice': my_Invoice,
 			'currency_code': 'EUR',
 			'notify_url': 'https://{}{}'.format(host, reverse("paypal-ipn")),
 			'return_url': 'https://{}{}'.format(host, reverse("payment_success")),
@@ -238,20 +250,78 @@ def billing_info(request):
 		if request.user.is_authenticated:
 			# Get The Billing Form
 			billing_form = PaymentForm()
-			return render(request, "payment/billing_info.html", {"paypal_form":paypal_form, "cart_products":cart_products, "quantities":quantities, "totals":totals, "shipping_info":request.POST, "billing_form":billing_form})
+
+			# logged in
+			user = request.user
+			# Create Order
+			create_order = Order(user=user, full_name=full_name, email=email, shipping_address=shipping_address, amount_paid=amount_paid, invoice=my_Invoice)
+			create_order.save()
+
+			# Add order items
+			
+			# Get the order ID
+			order_id = create_order.pk
+			
+			# Get product Info
+			for product in cart_products():
+				# Get product ID
+				product_id = product.id
+				# Get product price
+				if product.is_sale:
+					price = product.sale_price
+				else:
+					price = product.price
+
+				# Get quantity
+				for key,value in quantities().items():
+					if int(key) == product.id:
+						# Create order item
+						create_order_item = OrderItem(order_id=order_id, product_id=product_id, user=user, quantity=value, price=price)
+						create_order_item.save()
+
+
+			# Delete Cart from Database (old_cart field)
+			current_user = Profile.objects.filter(user__id=request.user.id)
+			# Delete shopping cart in database (old_cart field)
+			current_user.update(old_cart="")
+
+			return render(request, "payment/billing_info.html", {"paypal_form":paypal_form, "cart_products":cart_products, "quantities":quantities, "totals":totals, "shipping_info":request.POST, "billing_form":billing_form})			
 
 		else:
+			# not logged in
+			# Create Order
+			create_order = Order(full_name=full_name, email=email, shipping_address=shipping_address, amount_paid=amount_paid, invoice=my_Invoice)
+			create_order.save()
+
+			# Add order items
+			
+			# Get the order ID
+			order_id = create_order.pk
+			
+			# Get product Info
+			for product in cart_products():
+				# Get product ID
+				product_id = product.id
+				# Get product price
+				if product.is_sale:
+					price = product.sale_price
+				else:
+					price = product.price
+
+				# Get quantity
+				for key,value in quantities().items():
+					if int(key) == product.id:
+						# Create order item
+						create_order_item = OrderItem(order_id=order_id, product_id=product_id, quantity=value, price=price)
+						create_order_item.save()
+
 			# Not logged in
 			# Get The Billing Form
 			billing_form = PaymentForm()
 			return render(request, "payment/billing_info.html", {"paypal_form":paypal_form, "cart_products":cart_products, "quantities":quantities, "totals":totals, "shipping_info":request.POST, "billing_form":billing_form})
 
-
-		
-		shipping_form = request.POST
-		return render(request, "payment/billing_info.html", {"cart_products":cart_products, "quantities":quantities, "totals":totals, "shipping_form":shipping_form})	
 	else:
-		messages.success(request, "Access Denied")
+		messages.success(request, "Zugriff verweigert")
 		return redirect('home')
 
 
@@ -277,6 +347,19 @@ def checkout(request):
 	
 
 def payment_success(request):
+	#Delet the browser part
+	# FIRST Get the cart
+	cart = Cart(request)
+	cart_products = cart.get_prods
+	quantities = cart.get_quants
+	totals = cart.cart_total()
+
+	# Delete our cart
+	for key in list(request.session.keys()):
+		if key == "session_key":
+			# Delete the key
+			del request.session[key]
+
 	return render(request, "payment/payment_success.html", {})
 
 

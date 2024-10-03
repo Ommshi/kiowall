@@ -36,7 +36,6 @@
                                 <p class="fw-bold">{{ product.price }} €</p>
                                 {% endif %}
 
-
                                 <br/><br/>
                                 <div class="row justify-content-center mb-3">
                                     <div class="col-md-4 text-end">
@@ -71,13 +70,10 @@
                                 </div>
                                 <br/><br/>
 
-
                                 <button type="button" data-index="{{product.id}}" class="btn btn-secondary update-cart">Aktualisieren</button>
                                 <button type="button" data-index="{{product.id}}" class="btn btn-danger delete-product">Entfernen</button>
 
                                 <br/>
-
-
 
                                 <p class="text-muted">Kategorie: {{ product.category }}</p>
                             </div>
@@ -87,11 +83,10 @@
             </div>
             {% endfor %}
             <div align="right">
-                <h3>Total: ${{ totals }}</h3>
-                <a href="{% url 'checkout' %}" class="btn btn-success">Checkout</a>
-    
-                </div>
-                <br/><br/><br/>
+                <h3>Gesamt: €{{ totals }}</h3>
+                <a href="{% url 'checkout' %}" class="btn btn-success">Zur Kasse</a>
+            </div>
+            <br/><br/><br/>
             <!-- Button to go back to the home page -->
             <div class="text-center mt-4">
                 <a href="{% url 'home' %}" class="btn btn-primary btn-sm" style="font-size: 0.875rem; padding: 0.25rem 0.5rem;">Zur Startseite</a>
@@ -106,7 +101,6 @@
         {% endif %}
     </div>
 </div>
-
 
 <script>
 // Aktualisieren

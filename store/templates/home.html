@@ -1,89 +1,62 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<!-- Kopfzeile -->
+<header class="bg-light py-5">
+    <div class="container text-center">
+        <h1 class="display-4 fw-bold text-dark">Willkommen bei Kio Wall</h1>
+        <p class="lead text-muted mb-4">Stilvoll einkaufen in einer neuen Dimension</p>
+    </div>
+    <div class="position-relative">
+        <img src="dein-hintergrundbild-url.jpg" alt="Hintergrund" class="img-fluid" style="width: 100%; height: auto; position: absolute; top: 0; left: 0; z-index: -1; opacity: 0.5;">
+    </div>
+</header>
 
-        <!-- Header-->
-        <header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Shop in style</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">With this shop hompeage template</p>
-                </div>
-            </div>
-        </header>
-        <!-- Section-->
-        <section class="py-5">
-            <div class="container px-4 px-lg-5 mt-5">
+<!-- Abschnitt -->
+<section class="py-5">
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
 
-                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-
-                    {% for product in products %}
-                        {% if product.is_sale %}
-                        
-                        <div class="col mb-5">
-                            <div class="card h-100">
-                            <!-- Sale badge -->
-                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem;"> Sale </div>
-                                <!-- Product image-->
-                                <img class="card-img-top" src="{{ product.image.url}}" alt="..." />
-                                <!-- Product details-->
-                                <div class="card-body p-4">
-                                    <div class="text-center">
-                                        <!-- Product name-->
-                                        <h5 class="fw-bolder">{{ product.name }}</h5>
-                                <!-- Sale Star -->
-                                 <div class="d-flex justify-content-center small text-warning mb-2">
-                                    <div class="bi-star-fill"></div>
-                                    &nbsp;&nbsp;Angebot!&nbsp;&nbsp;
-                                    <div class="bi-star-fill"></div>
-                                 </div>
-                                        <!-- Product price-->
-                                        <strike>
-                                        {{ product.price }} €
-                                        </strike>
-                                        &nbsp
-                                        {{ product.sale_price }} €
-                                        <br/>
-                                     
-                                        <br/>
-                                        In: {{ product.category }}
-                                    </div>
-                                </div>
-                                <!-- Product actions-->
-                                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                    <div class="text-center"><a class="btn btn-outline-dark mt-auto"  href=" {% url 'product' product.id %}">Produkt ansehen</a></div>
-                                </div>
+            {% for product in products %}
+            <div class="col mb-5">
+                <div class="card h-100">
+                    <!-- Verkaufsabzeichen für reduzierte Preise -->
+                    {% if product.is_sale %}
+                    <div class="badge bg-danger text-white position-absolute" style="top: 0.5rem; right: 0.5rem;">Angebot</div>
+                    {% endif %}
+                    
+                    <!-- Produktbild -->
+                    <img class="card-img-top" src="{{ product.image.url }}" alt="{{ product.name }}" style="height: 200px; object-fit: cover; margin: auto;" />
+                    
+                    <!-- Produktdetails -->
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <h5 class="fw-bolder">{{ product.name }}</h5>
+                            
+                            <!-- Preisangaben -->
+                            {% if product.is_sale %}
+                            <div class="text-danger">
+                                <strike>{{ product.price }} €</strike>
+                                <span class="fw-bolder">{{ product.sale_price }} €</span>
                             </div>
-                        </div>
-
-                        {% else %}
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                            <img class="card-img-top" src="{{ product.image.url}}" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">{{ product.name }}</h5>
-                                    <!-- Product price-->
-                                    {{ product.price }} €
-                                    <br/>
-                                 
-                                    <br/>
-                                    In: {{ product.category }}
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href=" {% url 'product' product.id %}">Produkt ansehen</a></div>
-                            </div>
+                            {% else %}
+                            <div>{{ product.price }} €</div>
+                            {% endif %}
+                            
+                            <p class="text-muted">Kategorie: {{ product.category }}</p>
                         </div>
                     </div>
-                    {% endif %}
-                    {% endfor %}
-
+                    
+                    <!-- Produktaktionen -->
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center">
+                            <a class="btn btn-outline-dark mt-auto" href="{% url 'product' product.id %}">Produkt ansehen</a>
+                        </div>
+                    </div>
                 </div>
-        </section>
-
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
 {% endblock %}

@@ -23,8 +23,8 @@ SECRET_KEY = 'django-insecure-o-)f-fb)n2e2n#9j7^%t4db-e$^=oaw^3to!_jv)5f%4m%n5&3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['kiowall.com', 'kiowall-production.up.railway.app']
-CSRF_TRUSTED_ORIGINS = ['https://kiowall.com', 'https://kiowall-production.up.railway.app']
+ALLOWED_HOSTS = ['kiowall.com', 'kiowall-production.up.railway.app', 'localhost', '54c3-2a02-3030-a08-e7a3-3448-e55a-dd88-3b5e.ngrok-free.app']
+CSRF_TRUSTED_ORIGINS = ['https://kiowall.com', 'https://kiowall-production.up.railway.app', 'https://54c3-2a02-3030-a08-e7a3-3448-e55a-dd88-3b5e.ngrok-free.app']
 
 # Application definition
 

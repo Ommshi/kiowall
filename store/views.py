@@ -168,7 +168,6 @@ def login_user(request):
             messages.success(request, ("Du bist eingeloggt"))
             return redirect('home')
         else:
-            messages.success(request, ("Vielleicht sind das Passwort oder der Benutzername falsch. Bitte versuche es erneut."))
             return redirect('login')
 
     else:
