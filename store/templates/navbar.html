@@ -53,8 +53,13 @@
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="{% url 'category_summary' %}">Alle Produkte</a></li>
                         <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="{% url 'category' 'Getränke' %}">Getränke</a></li>
-                        <li><a class="dropdown-item" href="{% url 'category' 'E-Zigaretten' %}">E-Zigaretten</a></li>
+                        <li style="text-align: center;"> <a style="font-size: 14px; font-weight: bold; pointer-events: none; color: black;">SORTIMENT</a></li>
+                        <li><hr class="dropdown-divider" /></li>
+                        
+                        {% for category in categories %}
+                        <li><a class="dropdown-item" href="{% url 'category' category %}">{{ category }}</a></li>
+                        {% endfor %}
+                        
                     </ul>
                 </li>
             </ul>
@@ -63,7 +68,6 @@
                 <input type="text" class="form-control me-2 border-0 rounded-pill shadow-sm" placeholder="Suche nach Produkten" name="searched" aria-label="Suche">
                 <button type="submit" class="btn btn-dark rounded-pill px-4">
                     <i class="bi-search"></i>
-
                 </button>
             </form>
 
